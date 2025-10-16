@@ -6,12 +6,15 @@
 # ライブラリの読み込み
 ############################################################
 import os
+import sys
+import logging
+import unicodedata
+import datetime
 from dotenv import load_dotenv
 import streamlit as st
-import logging
-import sys
-import unicodedata
-from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader
+from typing import List
+
+from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader, PyPDFLoader, CSVLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, PromptTemplate
 from langchain.schema import HumanMessage, AIMessage
@@ -20,17 +23,15 @@ from langchain_community.vectorstores import Chroma
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
-from typing import List
-from sudachipy import tokenizer, dictionary
-from langchain_community.agent_toolkits import SlackToolkit
-from langchain.agents import AgentType, initialize_agent
-from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import EnsembleRetriever
-from docx import Document
 from langchain.output_parsers import CommaSeparatedListOutputParser
 from langchain.chains import LLMChain
-import datetime
+from langchain.agents import AgentType, initialize_agent
+from langchain_community.agent_toolkits import SlackToolkit
+from docx import Document
+from sudachipy import tokenizer, dictionary
+
 import constants as ct
 
 
@@ -43,6 +44,54 @@ load_dotenv()
 ############################################################
 # 関数定義
 ############################################################
+
+def create_customer_vectorstore():
+    """
+    顧客用PDF/TXT/DOCXからベクトルDBを作成
+    """
+    folder_path = "./data/rag/customer"
+    docs_all = []
+
+    if not os.path.exists(folder_path):
+        print(f"⚠️ フォルダが存在しません: {folder_path}")
+        return None
+
+    files = os.listdir(folder_path)
+    for file in files:
+        file_path = os.path.join(folder_path, file)
+        ext = os.path.splitext(file)[1].lower()
+        if ext in ct.SUPPORTED_EXTENSIONS:
+            loader_class = ct.SUPPORTED_EXTENSIONS[ext]
+            loader = loader_class(file_path)
+            docs = loader.load()
+            docs_all.extend(docs)
+
+    if not docs_all:
+        print("⚠️ 顧客データが見つかりません。ベクトル化をスキップします。")
+        return None
+
+    text_splitter = CharacterTextSplitter(
+        chunk_size=ct.CHUNK_SIZE,
+        chunk_overlap=ct.CHUNK_OVERLAP,
+        separator="\n",
+    )
+    split_docs = text_splitter.split_documents(docs_all)
+    if not split_docs:
+        print("⚠️ チャンク結果が空です。")
+        return None
+
+    embeddings = OpenAIEmbeddings()
+    persist_dir = "./data/vectorstore/customer"
+    os.makedirs(persist_dir, exist_ok=True)
+
+    vectorstore = Chroma.from_documents(
+        documents=split_docs,
+        embedding=embeddings,
+        persist_directory=persist_dir
+    )
+
+    print("✅ customer用ベクトルDB作成完了")
+    return vectorstore
 
 def build_error_message(message):
     """
