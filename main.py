@@ -14,6 +14,31 @@ from initialize import initialize
 import components as cn
 import constants as ct
 
+# ✅ 最初に呼ぶ
+st.set_page_config(
+    page_title="My App",
+    page_icon="💬",
+    layout="wide"
+)
+
+# ✅ .env の読み込み
+load_dotenv()
+
+# ✅ ロガー設定
+logger = logging.getLogger(ct.LOGGER_NAME)
+logger.setLevel(logging.INFO)
+
+# Streamlit 上にも出すハンドラ（任意）
+if not logger.hasHandlers():
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+# ✅ 動作確認ログ
+logger.info("アプリ起動開始")
+st.write("✅ Logger initialized")
 
 st.write("✅ Streamlit started")
 st.write(f"OPENAI_API_KEY: {os.environ.get('OPENAI_API_KEY')[:5]}*****")
@@ -21,11 +46,7 @@ st.write("✅ load_dotenv() completed")
 ############################################################
 # 設定関連
 ############################################################
-st.set_page_config(
-    page_title=ct.APP_NAME
-)
 
-load_dotenv()
 
 ############################################################
 # 初期化処理
