@@ -14,12 +14,6 @@ from initialize import initialize
 import components as cn
 import constants as ct
 
-# ✅ Streamlitの最初に必ず置く
-st.set_page_config(
-    page_title=ct.APP_NAME,
-    page_icon="💬",
-    layout="wide"
-)
 
 st.write("✅ Streamlit started")
 st.write(f"OPENAI_API_KEY: {os.environ.get('OPENAI_API_KEY')[:5]}*****")
@@ -33,11 +27,6 @@ st.set_page_config(
 
 load_dotenv()
 
-logger = logging.getLogger(ct.LOGGER_NAME)
-
-st.set_page_config(page_title="Customer Contact App", layout="wide")
-st.title("📞 Customer Contact App 起動中...")
-st.write("初期化処理を開始します...")
 ############################################################
 # 初期化処理
 ############################################################
