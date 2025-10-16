@@ -38,6 +38,7 @@ def initialize():
     画面読み込み時に実行する初期化処理
     """
     try:
+        ensure_rag_folders_exist()  # ✅ 自動作成
     # 初期化データの用意
         initialize_session_state()
     # ログ出力用にセッションIDを生成
@@ -188,3 +189,11 @@ def initialize_agent_executor():
         early_stopping_method="generate",
         handle_parsing_errors=True
     )
+
+def ensure_rag_folders_exist():
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "customer"), exist_ok=True)
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "service"), exist_ok=True)
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "company"), exist_ok=True)
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "hr"), exist_ok=True)
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "faq"), exist_ok=True)
+    os.makedirs(os.path.join(ct.RAG_TOP_FOLDER_PATH, "manual"), exist_ok=True)
