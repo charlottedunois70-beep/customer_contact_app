@@ -97,7 +97,7 @@ AI_AGENT_MAX_ITERATIONS = 5
 DB_SERVICE_PATH = "./.db_service"
 DB_CUSTOMER_PATH = "./.db_customer"
 
-RAG_TOP_FOLDER_PATH = ".customer_contact_app/data/rag/customer"
+RAG_TOP_FOLDER_PATH = ".customer_contact_app/data/rag"
 
 DB_NAMES = {
     DB_COMPANY_PATH: os.path.join(RAG_TOP_FOLDER_PATH, "company"),
