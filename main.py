@@ -5,10 +5,10 @@
 ############################################################
 # ライブラリの読み込み
 ############################################################
-from dotenv import load_dotenv
 import os
 import logging
 import streamlit as st
+from dotenv import load_dotenv
 import utils
 from initialize import initialize
 import components as cn
@@ -16,13 +16,16 @@ import constants as ct
 
 # ✅ 最初に呼ぶ
 st.set_page_config(
-    page_title="My App",
+    page_title=ct.APP_NAME,
     page_icon="💬",
     layout="wide"
 )
 
 # ✅ .env の読み込み
 load_dotenv()
+if not os.environ.get("OPENAI_API_KEY"):
+    st.error("環境変数 OPENAI_API_KEY が設定されていません。")
+    st.stop()
 
 # ✅ ロガー設定
 logger = logging.getLogger(ct.LOGGER_NAME)
@@ -38,11 +41,10 @@ if not logger.hasHandlers():
 
 # ✅ 動作確認ログ
 logger.info("アプリ起動開始")
-st.write("✅ Logger initialized")
 
-st.write("✅ Streamlit started")
+st.write("Streamlit started")
+st.write(".env loaded")
 st.write(f"OPENAI_API_KEY: {os.environ.get('OPENAI_API_KEY')[:5]}*****")
-st.write("✅ load_dotenv() completed")
 ############################################################
 # 設定関連
 ############################################################
@@ -53,6 +55,7 @@ st.write("✅ load_dotenv() completed")
 ############################################################
 try:
     initialize()
+    logger.info("initialize() completed")
 except Exception as e:
     logger.error(f"{ct.INITIALIZE_ERROR_MESSAGE}\n{e}")
     st.error(utils.build_error_message(ct.INITIALIZE_ERROR_MESSAGE), icon=ct.ERROR_ICON)

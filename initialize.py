@@ -37,15 +37,18 @@ def initialize():
     """
     画面読み込み時に実行する初期化処理
     """
+    try:
     # 初期化データの用意
-    initialize_session_state()
+        initialize_session_state()
     # ログ出力用にセッションIDを生成
-    initialize_session_id()
+        initialize_session_id()
     # ログ出力の設定
-    initialize_logger()
+        initialize_logger()
     # Agent Executorを作成
-    initialize_agent_executor()
-
+        initialize_agent_executor()
+    
+    except Exception as e:
+        raise RuntimeError(f"initialize() failed: {e}")
 
 def initialize_session_state():
     """
