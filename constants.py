@@ -77,7 +77,7 @@ ENCODING_KIND = "cl100k_base"
 # ==========================================
 # RAG参照用のデータソース系
 # ==========================================
-RAG_TOP_FOLDER_PATH = "./data/rag"
+RAG_TOP_FOLDER_PATH = "./data/rag/customer"
 
 SUPPORTED_EXTENSIONS = {
     ".pdf": PyMuPDFLoader,
