@@ -14,6 +14,13 @@ from initialize import initialize
 import components as cn
 import constants as ct
 
+# ✅ Streamlitの最初に必ず置く
+st.set_page_config(
+    page_title=ct.APP_NAME,
+    page_icon="💬",
+    layout="wide"
+)
+
 st.write("✅ Streamlit started")
 st.write(f"OPENAI_API_KEY: {os.environ.get('OPENAI_API_KEY')[:5]}*****")
 st.write("✅ load_dotenv() completed")
