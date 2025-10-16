@@ -6,7 +6,7 @@
 # ライブラリの読み込み
 ############################################################
 from langchain_community.document_loaders import PyMuPDFLoader, Docx2txtLoader, TextLoader
-
+import os
 
 ############################################################
 # 共通変数の定義
@@ -77,7 +77,7 @@ ENCODING_KIND = "cl100k_base"
 # ==========================================
 # RAG参照用のデータソース系
 # ==========================================
-RAG_TOP_FOLDER_PATH = "./data/rag/customer"
+RAG_TOP_FOLDER_PATH = "./data/rag/"
 
 SUPPORTED_EXTENSIONS = {
     ".pdf": PyMuPDFLoader,
@@ -97,10 +97,12 @@ AI_AGENT_MAX_ITERATIONS = 5
 DB_SERVICE_PATH = "./.db_service"
 DB_CUSTOMER_PATH = "./.db_customer"
 
+RAG_TOP_FOLDER_PATH = "./data/rag"
+
 DB_NAMES = {
-    DB_COMPANY_PATH: f"{RAG_TOP_FOLDER_PATH}/company",
-    DB_SERVICE_PATH: f"{RAG_TOP_FOLDER_PATH}/service",
-    DB_CUSTOMER_PATH: f"{RAG_TOP_FOLDER_PATH}"
+    DB_COMPANY_PATH: os.path.join(RAG_TOP_FOLDER_PATH, "company"),
+    DB_SERVICE_PATH: os.path.join(RAG_TOP_FOLDER_PATH, "service"),
+    DB_CUSTOMER_PATH: os.path.join(RAG_TOP_FOLDER_PATH, "customer")
 }
 
 AI_AGENT_MODE_ON = "利用する"
