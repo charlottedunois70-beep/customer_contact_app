@@ -13,7 +13,9 @@ from initialize import initialize
 import components as cn
 import constants as ct
 
-
+st.write("✅ Streamlit started")
+st.write(f"OPENAI_API_KEY: {os.environ.get('OPENAI_API_KEY')[:5]}*****")
+st.write("✅ load_dotenv() completed")
 ############################################################
 # 設定関連
 ############################################################
@@ -25,7 +27,9 @@ load_dotenv()
 
 logger = logging.getLogger(ct.LOGGER_NAME)
 
-
+st.set_page_config(page_title="Customer Contact App", layout="wide")
+st.title("📞 Customer Contact App 起動中...")
+st.write("初期化処理を開始します...")
 ############################################################
 # 初期化処理
 ############################################################
